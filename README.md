@@ -43,7 +43,7 @@ Donations will go towards web hosting for the project, domain name registration,
 - [lua-http Documentation](https://daurnimator.github.io/lua-http/0.2/)
 - [LuaRocks](https://luarocks.org/)
 - [Official Lua Website](https://www.lua.org/)
-- [https://semver.org/](https://semver.org/)
+- [Semantic Versioning](https://semver.org/)
 
 # TODO
 1. Documentation
