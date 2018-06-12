@@ -2,14 +2,15 @@
 	<img src="assets/kolba_blue_1_small.png" height="130">
 </p>
 
+---
+
 <p align="center"><i>Kolba is a fast, minimal, web framework for Lua.</i></p>
 
-<p align="center">
+---
 ![version](https://img.shields.io/badge/version-0.1.0-red.svg)
 [![MIT](https://img.shields.io/packagist/l/doctrine/orm.svg)](LICENSE)
 ![IRC](https://img.shields.io/badge/irc.freenode.net-%23kolba-lightgrey.svg)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/jessehorne/kolba/issues)
-</p>
 
 # Try it
 <pre><code><b>~$ </b>sudo apt-get install luarocks
