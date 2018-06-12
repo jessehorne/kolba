@@ -1,5 +1,5 @@
 package = "kolba"
-version = "0.0-1"
+version = "0.1.0"
 source = {
    url = "..." -- We don't have one yet
 }
