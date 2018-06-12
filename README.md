@@ -9,7 +9,7 @@
 ---
 
 ![version](https://img.shields.io/badge/version-0.1.0-red.svg)
-[![MIT](https://img.shields.io/packagist/l/doctrine/orm.svg)](LICENSE)
+[![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![IRC](https://img.shields.io/badge/irc.freenode.net-%23kolba-lightgrey.svg)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/jessehorne/kolba/issues)
 
