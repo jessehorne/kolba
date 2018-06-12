@@ -48,6 +48,7 @@ Donations will go towards web hosting for the project, domain name registration,
 - [LuaRocks](https://luarocks.org/)
 - [Official Lua Website](https://www.lua.org/)
 - [Semantic Versioning](https://semver.org/)
+- [LuaRocks Style Guide](https://github.com/luarocks/lua-style-guide)
 
 # NOTE
 If you're reading this, you're witnessing the birth of a brand new project. Stick around, things are going to change.
