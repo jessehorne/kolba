@@ -39,7 +39,7 @@ The kolba development server is running on port 7000
 
 ### Funding
 Donations will go towards web hosting for the project, domain name registration, caffeine, and so on.
-[Buy me a coffee](ko-fi.com/kolbaproject)
+[Buy me a coffee](https://ko-fi.com/kolbaproject)
 
 # Useful links
 - [OWASP Secure Web Application Framework Manifesto](https://www.owasp.org/index.php/Projects/OWASP_Secure_Web_Application_Framework_Manifesto/Releases/Current/Manifesto)
