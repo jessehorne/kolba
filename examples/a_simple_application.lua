@@ -1,11 +1,23 @@
 local kolba = require("kolba")
 
-app = kolba.create()
+local config = {
+	host="localhost",
+	port=7070,
+	is_dev=true
+}
 
-function json_echo()
-	return 200, "application/json", app.request.body()
+app = kolba.create(config)
+
+local index = function()
+	return {200, "text/plain", "Hello, World!"}
 end
 
-app.route("GET", "/", "Hello, World!")
+local index2 = function()
+	return {200, "text/plain", "Hello2, World2!222"}
+end
+
+app.route("GET", "^/.+$", index)
+app.route("GET", "^/hello$", index2)
+
 
 app.run()

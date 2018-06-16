@@ -22,7 +22,7 @@ Lua 5.3.3  Copyright (C) 1994-2016 Lua.org, PUC-Rio
 <b>> </b>app = kolba.create()
 <b>> </b>app.route("GET", "/", "Hello, World!")
 <b>> </b>app.run()
-Your kolba development server is running on port 7000
+The kolba development server is running on port 7000
 </code>
 </pre>
 

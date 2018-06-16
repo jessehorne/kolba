@@ -2,21 +2,19 @@ local lustache = require("lustache")
 
 local template = {}
 
-template.folder = "templates/"
+template.folder = ""
 template.views = {}
 
 function template.view(name, model)
+	local _view
 	if not template.views[name] then
 		_file = io.open(template.folder .. name .. ".html", "rb")
 		_file_contents = _file:read("a")
-		_rendered = lustache:render(_file_contents, model)
-		
-		template.views[name] = _rendered
-
+		_view = lustache:render(_file_contents, model)
 		_file:close()
 	end
 
-	return template.views[name]
+	return _view
 end
 
 return template

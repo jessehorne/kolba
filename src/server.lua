@@ -8,89 +8,134 @@ local http_server = require("http.server")
 local http_headers = require("http.headers")
 
 local server = {}
-server.is_in_dev = true
-server.port = 8080
-server.stream = nil
-server.method = nil
 
 server.body = {}
 server.body.json = nil
-server.body.get_json = function()
+
+function server.body.get_json()
 	if not server.body.json then
 		server.body.json = JSON.decode(server.body.text)
 	end
 
 	return server.body.json
 end
+
+
 server.body.text = nil
 server.body.get_text = function() return server.body.text end
+
 
 server.response = {}
 server.response.headers = http_headers.new()
 
-server.onstream = function(serv, stream)
-	server.stream = stream
 
-	local _headers = stream:get_headers()
-	local _method = _headers:get(":method")
-	local _path = _headers:get(":path") or ""
+function server.onstream(serv, stream)
+	local headers = stream:get_headers()
 
-	server.method = _method
+	local method = headers:get(":method")
+	local path = headers:get(":path") or ""
 
 	server.body.text = stream:get_body_as_string(1)
 
-	-- Development Mode: Log request
-	if server.is_in_dev then
-		_pre = '[%s] "%s %s HTTP/%g" "%s" "%s"\n'
 
-		local _dev_msg = {
+	if server.conf.is_dev then
+		local pre = '[%s] "%s %s HTTP/%g" "%s" "%s"\n'
+
+		local dev_msg = {
 			os.date("%d/%b/%Y:%M:%S %z"),
-			_method or "",
-			_path,
+			method or "",
+			path,
 			stream.connection.version,
-		   _headers:get("referer") or "-",
-			_headers:get("user-agent") or "-"
+		   headers:get("referer") or "-",
+			headers:get("user-agent") or "-"
 		}
 
-		local _dev_msg_print = string.format(_pre, table.unpack(_dev_msg))
+		local dev_msg_print = string.format(pre, table.unpack(dev_msg))
 
-		io.stderr:write(_dev_msg_print)
+		server.debug(dev_msg_print)
 	end
 
 
-	local _status, _type, _body = ROUTE:body(_method, _path)
+	local route = kolba.route.match(method, path)
+	local body = ""
 
-	if type(_status) == "number" then
-		_status = tostring(_status)
+	if route then
+		headers:upsert(":status", tostring(route[1]))
+		headers:upsert("content-type", route[2])
+		body = route[3]
+	else
+		headers:upsert(":status", "404")
+		body = "Route not found."
 	end
 
-	server.response.headers:append(":status", _status)
-	server.response.headers:append("content-type", _type)
+	stream:write_headers(headers, method=="HEAD")
 
-	stream:write_headers(server.response.headers, _method=="HEAD")
 
-	if _method ~= "HEAD" then
-		stream:write_chunk(_body, true)
+	if method ~= "HEAD" then
+		stream:write_chunk(body, true)
 	end
 end
+
 
 server.onerror = function(serv, ctx, op, err, errno)
-	if server.is_in_dev then
-		io.stderr:write(tostring(err) .. "\n")
+	server.debug("[ERROR] " .. tostring(err))
+end
+
+
+server.debug = function(msg)
+	if server.conf.is_dev then
+		io.stderr:write("[DEBUG] " .. msg .. "\n")
 	end
 end
 
-server.instance = http_server.listen({
-	host="localhost",
-	port=server.port,
-	onstream=server.onstream,
-	onerror=server.onerror
-})
 
-server.run = function()
-	io.stderr:write("kolba is running your application in development mode on port " .. server.port .. "\n")
-	assert(server.instance:listen())
-	assert(server.instance:loop())
+server.valid_config = function(conf)
+	local ok = true
+	local msgs = {}
+
+	local valid_values = {
+		"host",
+		"port",
+		"is_dev"
+	}
+
+	for i,v in ipairs(valid_values) do
+		if not conf[v] then
+			table.insert(msgs, v .. " is missing.")
+			ok = false
+		end
+	end
+
+	if not ok then
+		for i,v in ipairs(msgs) do
+			server.debug(v)
+		end
+
+		return
+	end
+
+	return ok
+end
+
+server.run = function(self, conf)
+
+	local conf_is_valid = server.valid_config(server.conf)
+
+	if not conf_is_valid then
+		return false
+	end
+
+	server.debug("kolba is running in [development] mode on port " .. server.conf.port .. "!")
+
+	server.instance = http_server.listen({
+		host = server.conf.host,
+		port = server.conf.port,
+		onstream = server.onstream,
+		onerror = server.onerror
+	})
+
+	server.instance:listen()
+	server.instance:loop()
 end
 
 return server

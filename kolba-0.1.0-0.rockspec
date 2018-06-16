@@ -1,7 +1,7 @@
 package = "kolba"
-version = "0.1.0"
+version = "0.1.0-0"
 source = {
-   url = "..." -- We don't have one yet
+   url = "http://github.com/jessehorne/kolba" -- We don't have one yet
 }
 description = {
    summary = "A micro web framework for Lua",
@@ -19,22 +19,24 @@ description = {
 			2. Use kolba
 			3. Advance and Advocate
    ]],
-   homepage = "http://...",
+   homepage = "http://github.com/jessehorne/kolba",
    license = "MIT"
 }
 dependencies = {
    "lua >= 5.2, < 5.4",
 	"http >= 0.2",
-	"lustache"
+	"lustache",
+	"mimetypes"
 }
 build = {
    type = "builtin",
 	modules = {
 		kolba = "src/kolba.lua",
 		["kolba.server"] = "src/server.lua",
-		["kolba.route"] = "src/route.lua",
 		["kolba.json"] = "src/json.lua",
 		["kolba.template"] = "src/template.lua",
+		["kolba.route"] = "src/route.lua",
+		["kolba.browze"] = "src/browze.lua",
 		["util.json"] = "util/json.lua"
 	}
 }

@@ -1,51 +1,89 @@
 --[[ The beginning...
 
-This module provides everything for the developer utilizing this framework. It
-returns something very important.
-
-kolba - the central object, instanced by the user, giving convenient access to
-routing, and more...
-
-route(method, path, func) - Handles routing
-run() - Starts the server loop, which makes the application accessible
-
 ]]
 
-SERVER = require("kolba.server")
-ROUTE = require("kolba.route")
-TEMPLATE = require("kolba.template")
-JSON = require("util.json")
+kolba = {}
 
-local kolba = {}
+kolba.server = require("kolba.server")
+kolba.template = require("kolba.template")
+kolba.route = require("kolba.route")
+kolba.browze = require("kolba.browze")
 
-kolba.create = function()
+kolba.json = require("util.json")
+kolba.mimetypes = require("mimetypes")
+kolba.lfs = require("lfs")
+
+
+kolba.create = function(conf)
 	local _app = {}
 
+	kolba.server.conf = conf
+
 	_app.run = function()
-		SERVER.run()
+		kolba.server:run()
 	end
 
-	_app.route = function(method, path, callback)
-		ROUTE:route(method, path, callback)
+	-- Routing
+	_app.route = function(method, path, body)
+		kolba.route.add(method, path, body)
 	end
 
+
+	-- Request
 	_app.request = {}
+
 	_app.request.json = function()
-		return SERVER.body.get_json()
-	end
-	_app.request.body = function()
-		return SERVER.body.text
+		return kolba.server.body.get_json()
 	end
 
+	_app.request.body = function()
+		return kolba.server.body.text
+	end
+
+
+	-- Helper
+	_app.load_view = function(path)
+		local file = io.open(path, "rb")
+
+		if file then
+			local contents = file:read("a")
+			file:close()
+			return {200, kolba.mimetypes.guess(path), contents}
+		end
+	end
+
+	_app.set_public_dir = function(public_path)
+		-- create routes for projects public/ directory?
+		local path = kolba.lfs.currentdir() .. "/" .. public_path
+
+		if not kolba.browze.exists(path) then return end -- exit if file doesn't exist.
+
+		local files = kolba.browze.get_all_files(path)
+
+		for i,v in ipairs(files) do
+			local route = string.match(v, path .. "(/.+)$")
+
+			_app.route("GET", route, function() return _app.load_view(v) end)
+		end
+	end
+
+	_app.set_template_dir = function(path)
+		kolba.template.folder = path
+	end
+
+	-- Template
 	_app.template = function(name, model)
-		local _view, err = TEMPLATE.view(name, model)
+		local _view, err = kolba.template.view(name, model)
 		if not _view then
-			io.stderr:write(err)
+			io.stderr:write("no view " .. err)
 		end
 
-		io.stderr:write("hi " .. _view)
 		return _view
 	end
+
+	-- Init
+	_app.set_template_dir("templates/")
+	_app.set_public_dir("public")
 
 	return _app
 end
