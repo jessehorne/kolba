@@ -34,13 +34,6 @@ The kolba development server is running on port 7000
 - Fork the repository and create a pull request
 - Use kolba to build something and then tell the world!
 
-### Communication
-- Join #kolba on <i>Freenode</i>
-
-### Funding
-Donations will go towards web hosting for the project, domain name registration, caffeine, and so on.
-[Buy me a coffee](https://ko-fi.com/kolbaproject)
-
 # Useful links
 - [OWASP Secure Web Application Framework Manifesto](https://www.owasp.org/index.php/Projects/OWASP_Secure_Web_Application_Framework_Manifesto/Releases/Current/Manifesto)
 - [GitHub's Open Source Guide](https://opensource.guide/)
@@ -49,6 +42,3 @@ Donations will go towards web hosting for the project, domain name registration,
 - [Official Lua Website](https://www.lua.org/)
 - [Semantic Versioning](https://semver.org/)
 - [LuaRocks Style Guide](https://github.com/luarocks/lua-style-guide)
-
-# NOTE
-If you're reading this, you're witnessing the birth of a brand new project. Stick around, things are going to change.
